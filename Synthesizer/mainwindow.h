@@ -29,6 +29,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void playMidiNote (int id);
+    void releaseMidiNote(int id);
 
 private slots:
     void timerEvent(QTimerEvent *event);
@@ -48,11 +50,9 @@ private slots:
     void on_oscillatorType_2_valueChanged(int oscillatorType);
     void on_oscillatorType_3_valueChanged(int oscillatorType);
     void playNote (int oscillatorIndex, int id);
-    void playMidiNote (int id);
     void activateNeededOscillators();
     void activateAllOscillators();
     void releaseNote (int oscillatorIndex, int id);
-    void releaseMidiNote(int id);
     void releaseAllNotes();
 
     void on_volumeSlider_0_valueChanged(int value);

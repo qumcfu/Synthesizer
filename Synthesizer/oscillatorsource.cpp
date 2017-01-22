@@ -17,7 +17,7 @@ OscillatorSource::OscillatorSource() : synthesisType(Simple){
     envelopes = new Envelope[oscillatorCount];
     filters = new Filter[oscillatorCount];
 
-    oodCount = 10;
+    oodCount = 30;
     oods = new Oscillator[oodCount];
     eods = new Envelope[oodCount];
     activeOscillatorCount = 0;

@@ -11,7 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Synthesizer
 TEMPLATE = app
 
-INCLUDEPATH += ../audioEngine
+INCLUDEPATH += ../audioEngine \
+               ../drumstick
 SOURCES += main.cpp\
         mainwindow.cpp \
         oscillator.cpp \
@@ -35,3 +36,4 @@ FORMS    += mainwindow.ui
 DISTFILES +=
 
 include(../audioEngine/audioplayer.pri)
+include(../drumstick/drumstick.pro)

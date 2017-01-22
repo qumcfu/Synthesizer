@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     audioPlayer(this),
     oscillatorOffset(0),
     oscillatorCount(4){
+
     ui->setupUi(this);
 
     activeOscillatorId = 0;
@@ -88,15 +89,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     organizeKeys();
     showHotkeys(false);
-    styleSheetWhite = QString("QPushButton {background-color: white; color: black; border-style: outset; border-width: 1px; border-color: black; border-radius: 4px} QPushButton:pressed {background-color: rgb(192, 192, 192); border-color: rgb(64, 64, 64);}");
-    styleSheetBlack = QString("QPushButton {background-color: black; color: white; border-style: outset; border-width: 1px; border-color: white; border-radius: 8px;} QPushButton:pressed {background-color: rgb(64, 64, 64); border-color: rgb(128, 128, 128);}");
-    styleSheetLightGreen = QString("QPushButton {background-color: rgb(102, 205, 0); color: black; border-style: outset; border-width: 1px; border-color: black; border-radius: 4px};");
-    styleSheetDarkGreen = QString("QPushButton {background-color: rgb(69, 139, 0); color: black; border-style: outset; border-width: 1px; border-color: black; border-radius: 8px};");
-    styleSheetLightBlue = QString("QPushButton {background-color: rgb(126, 192, 238); color: black; border-style: outset; border-width: 1px; border-color: black; border-radius: 4px};");
-    styleSheetLightBlueAlt = QString("QPushButton {background-color: rgb(155, 226, 255); color: black; border-style: outset; border-width: 1px; border-color: black; border-radius: 4px};");
-    styleSheetDarkBlue = QString("QPushButton {background-color: rgb(54, 100, 139); color: black; border-style: outset; border-width: 1px; border-color: white; border-radius: 8px};");
-    styleSheetDarkBlueAlt = QString("QPushButton {background-color: rgb(79, 148, 205); color: black; border-style: outset; border-width: 1px; border-color: white; border-radius: 8px};");
-    styleSheetLightRed = QString("QPushButton {background-color: rgb(200, 0, 64); color: black; border-style: outset; border-width: 1px; border-color: black; border-radius: 4px};");
+    styleSheetWhite = QString("QPushButton {background-color: white; color: black; border-style: outset; border-width: 1px; border-color: black; border-radius: 4px} QPushButton:pressed {background-color: rgb(192, 192, 192); border-color: rgb(64, 64, 64)}");
+    styleSheetBlack = QString("QPushButton {background-color: black; color: white; border-style: outset; border-width: 1px; border-color: white; border-radius: 8px} QPushButton:pressed {background-color: rgb(64, 64, 64); border-color: rgb(128, 128, 128)}");
+    styleSheetLightGreen = QString("QPushButton {background-color: rgb(102, 205, 0); color: black; border-style: outset; border-width: 1px; border-color: black; border-radius: 4px}");
+    styleSheetDarkGreen = QString("QPushButton {background-color: rgb(69, 139, 0); color: black; border-style: outset; border-width: 1px; border-color: black; border-radius: 8px}");
+    styleSheetLightBlue = QString("QPushButton {background-color: rgb(126, 192, 238); color: black; border-style: outset; border-width: 1px; border-color: black; border-radius: 4px}");
+    styleSheetLightBlueAlt = QString("QPushButton {background-color: rgb(155, 226, 255); color: black; border-style: outset; border-width: 1px; border-color: black; border-radius: 4px}");
+    styleSheetDarkBlue = QString("QPushButton {background-color: rgb(54, 100, 139); color: black; border-style: outset; border-width: 1px; border-color: white; border-radius: 8px}");
+    styleSheetDarkBlueAlt = QString("QPushButton {background-color: rgb(79, 148, 205); color: black; border-style: outset; border-width: 1px; border-color: white; border-radius: 8px}");
+    styleSheetLightRed = QString("QPushButton {background-color: rgb(200, 0, 64); color: black; border-style: outset; border-width: 1px; border-color: black; border-radius: 4px}");
 }
 
 MainWindow::~MainWindow()
@@ -241,15 +242,15 @@ void MainWindow::updateAllOscillatorIcons(){
         if (oscillatorSource.isOscillatorParticipating(i)){
             updateOscillatorIcon(i, false);
             oscillatorStatus[i]->setText(QString("On"));
-            oscillatorStatus[i]->setStyleSheet("QLabel {color: green;}");
+            oscillatorStatus[i]->setStyleSheet("QLabel {color: green}");
         } else {
             updateOscillatorIcon(i, true);
             oscillatorStatus[i]->setText(QString("Off"));
-            oscillatorStatus[i]->setStyleSheet("QLabel {color: red;}");
+            oscillatorStatus[i]->setStyleSheet("QLabel {color: red}");
         }
     }
     oscillatorStatus[activeOscillatorId]->setText(QString("Active"));
-    oscillatorStatus[activeOscillatorId]->setStyleSheet("QLabel {color: blue;}");
+    oscillatorStatus[activeOscillatorId]->setStyleSheet("QLabel {color: blue}");
 
 }
 
@@ -402,7 +403,7 @@ void MainWindow::activateAllOscillators(){
 void MainWindow::releaseNote(int oscillatorIndex, int id){
     bool needToRecolor = (id == oscillatorSource.getNoteId(oscillatorIndex) && oscillatorSource.getActiveOODCount() > 0);
     oscillatorSource.noteOff(oscillatorIndex, id + keyShift);
-    updateOscillatorIcon(oscillatorIndex, true);
+//    updateOscillatorIcon(oscillatorIndex, true);
     if (id != -1){
         keys[id]->setStyleSheet(getMatchingStyleSheet(false, !keys[id]->objectName().contains("is") && !keys[id]->objectName().contains("B"), oscillatorIndex, id));
     }
