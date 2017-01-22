@@ -17,6 +17,7 @@
 #include <QAudioOutput>
 #include "audioplayer.h"
 #include "oscillatorsource.h"
+#include "detection.h"
 
 namespace Ui {
 class MainWindow;
@@ -31,6 +32,7 @@ public:
     ~MainWindow();
     void playMidiNote (int id);
     void releaseMidiNote(int id);
+    void setDetection(Detection *d);
 
 private slots:
     void timerEvent(QTimerEvent *event);
@@ -193,6 +195,7 @@ private slots:
     void on_filterCutoffBox_valueChanged(double cutoff);
 
     void on_debugButton_pressed();
+    void detectionUpdate();
 
 private:
     void initializeAudio();
@@ -203,6 +206,7 @@ private:
     OscillatorSource oscillatorSource;
     AudioPlayer audioPlayer;
     int timerId;
+    int detectionTimerId;
     int oscillatorOffset;
     int activeOscillatorId;
     int oscillatorCount;
@@ -227,6 +231,8 @@ private:
     int keyShift;
     bool sampleViewRotated;
     bool debugView;
+    Detection* detection;
+    bool eyesOpen;
 
 };
 

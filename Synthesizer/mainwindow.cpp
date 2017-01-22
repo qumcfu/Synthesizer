@@ -75,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
     initializeAudio();
     setActiveOscillator(0);
     timerId = startTimer(20);
+    detectionTimerId = startTimer(50);
 
     for (int i = 0; i < 19; i++){
         keyDown[i] = false;
@@ -98,11 +99,14 @@ MainWindow::MainWindow(QWidget *parent) :
     styleSheetDarkBlue = QString("QPushButton {background-color: rgb(54, 100, 139); color: black; border-style: outset; border-width: 1px; border-color: white; border-radius: 8px}");
     styleSheetDarkBlueAlt = QString("QPushButton {background-color: rgb(79, 148, 205); color: black; border-style: outset; border-width: 1px; border-color: white; border-radius: 8px}");
     styleSheetLightRed = QString("QPushButton {background-color: rgb(200, 0, 64); color: black; border-style: outset; border-width: 1px; border-color: black; border-radius: 4px}");
+
+    eyesOpen = true;
 }
 
 MainWindow::~MainWindow()
 {
     killTimer(timerId);
+    killTimer(detectionTimerId);
     delete ui;
 }
 
@@ -121,7 +125,11 @@ void MainWindow::initializeAudio(){
 }
 
 void MainWindow::timerEvent(QTimerEvent *event){
-    updateVisuals();
+    if (event->timerId() == timerId){
+        updateVisuals();
+    } else if (event->timerId() == detectionTimerId){
+        detectionUpdate();
+    }
     event->accept();
 }
 
@@ -1348,4 +1356,19 @@ void MainWindow::on_debugButton_pressed(){
     ui->note_AO->setVisible(debugView);
     ui->note_OOD_0->setVisible(debugView);
     ui->note_OOD_1->setVisible(debugView);
+}
+
+void MainWindow::setDetection(Detection *d){
+    detection = d;
+}
+
+void MainWindow::detectionUpdate(){
+    if (eyesOpen != detection->getEyesOpen()){
+        eyesOpen = detection->getEyesOpen();
+        if (eyesOpen){
+            on_envelopeRandomizer_pressed();
+        } else {
+
+        }
+    }
 }

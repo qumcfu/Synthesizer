@@ -20,7 +20,8 @@ SOURCES += main.cpp\
         envelope.cpp \
         modulation.cpp \
         addition.cpp \
-        filter.cpp
+        filter.cpp \
+    detection.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -29,11 +30,25 @@ HEADERS  += mainwindow.h \
         envelope.h \
         modulation.h \
         addition.h \
-        filter.h
+        filter.h \
+    detection.h
 
 FORMS    += mainwindow.ui
 
-DISTFILES +=
+LIBS += -L/usr/local/lib -L/usr/local/Cellar/opencv3/3.2.0/lib
+
+
+QT_CONFIG -= no-pkg-config
+CONFIG += link_pkgconfig
+PKGCONFIG += opencv
+
+DISTFILES += \
+    ../haarcascade_eye_tree_eyeglasses.xml \
+    ../haarcascade_frontalface_alt.xml \
+    ../haarcascade_lefteye_2splits.xml \
+    ../haarcascade_righteye_2splits.xml
 
 include(../audioEngine/audioplayer.pri)
 include(../drumstick/drumstick.pro)
+
+unix: PKGCONFIG += /usr/local/Cellar/opencv3/3.2.0/lib/pkgconfig/opencv.pc

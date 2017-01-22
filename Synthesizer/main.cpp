@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "detection.h"
 #include <QApplication>
 #include <QDebug>
 #include <QThread>
@@ -9,6 +10,7 @@ using namespace drumstick::rt;
 
 class Memory{
   MainWindow* w;
+  Detection *d;
   Memory() {}
   virtual ~Memory() {
       delete m_instance;
@@ -28,6 +30,14 @@ public:
 
   MainWindow* mainWindow(){
       return w;
+  }
+
+  void setDetection(Detection &d){
+      this->d = &d;
+  }
+
+  Detection* detection(){
+      return d;
   }
 
 
@@ -72,19 +82,33 @@ private:
     }
 };
 
+class DetectionThread : public QThread{
+private:
+    void run(){
+        Memory::instance()->detection()->init();
+    }
+};
+
 int main(int argc, char *argv[]){
     QApplication a(argc, argv);
+
     MainWindow w;
+    Detection d;
+    w.setDetection(&d);
     w.show();
+
 
     qDebug()<<"From main thread: "<<QThread::currentThreadId();
 
     Thread t;
+    DetectionThread dt;
     Memory* m = Memory::instance();
     m->setMainWindow(w);
+    m->setDetection(d);
 //    QObject::connect(&t, SIGNAL(finished()), &a, SLOT(quit()));
 
     t.start();
+    dt.start();
 
     return a.exec();
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.0.2, 2017-01-22T15:51:11. -->
+<!-- Written by QtCreator 4.0.2, 2017-01-22T16:36:37. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -119,8 +119,8 @@
     <value type="int" key="ProjectExplorer.BuildConfiguration.BuildStepListCount">2</value>
     <value type="bool" key="ProjectExplorer.BuildConfiguration.ClearSystemEnvironment">false</value>
     <valuelist type="QVariantList" key="ProjectExplorer.BuildConfiguration.UserEnvironmentChanges">
-     <value type="QString">PFG_CONFIG_PATH=/usr/local/Cellar/opencv3/3.2.0/lib/pkgconfig</value>
      <value type="QString">PATH=/Applications/QtCreator/5.7/clang_64/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin</value>
+     <value type="QString">PKG_CONFIG_PATH=/usr/local/Cellar/opencv3/3.2.0/lib/pkgconfig</value>
     </valuelist>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Debug</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
