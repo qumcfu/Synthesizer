@@ -5,6 +5,7 @@
 #include <QAudioDecoder>
 #include <QAudioFormat>
 #include <math.h>
+#include <chrono>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -25,12 +26,14 @@ MainWindow::MainWindow(QWidget *parent) :
         additionInterval[i] = 0;
     }
     processedSampleScene = new QGraphicsScene(this);
+    faceScene = new QGraphicsScene(this);
 
     ui->graphicsView_0->setScene(scenes[0]);
     ui->graphicsView_1->setScene(scenes[1]);
     ui->graphicsView_2->setScene(scenes[2]);
     ui->graphicsView_3->setScene(scenes[3]);
 
+    ui->faceView->setScene(faceScene);
     ui->processedSamplesView_0->setScene(processedSampleScene);
     recentSampleCount = 200;
     sampleViewRotated = true;
@@ -69,6 +72,11 @@ MainWindow::MainWindow(QWidget *parent) :
     additionIntervalComboBoxes[1] = ui->additionIntervalBox_1;
     additionIntervalComboBoxes[2] = ui->additionIntervalBox_2;
     additionIntervalComboBoxes[3] = ui->additionIntervalBox_3;
+
+    volumeSliders[0] = ui->volumeSlider_0;
+    volumeSliders[1] = ui->volumeSlider_1;
+    volumeSliders[2] = ui->volumeSlider_2;
+    volumeSliders[3] = ui->volumeSlider_3;
 
     additionManagerActive = false;
 
@@ -283,23 +291,23 @@ void MainWindow::on_oscillatorType_3_valueChanged(int oscillatorType){
 }
 
 void MainWindow::on_volumeSlider_0_valueChanged(int value){
-    oscillatorSource.setGain(0, value);
-    ui->volumeLabel_0->setText(QString::number(value) + " dB");
+    oscillatorSource.setGain(0, value / 10.0f);
+    ui->volumeLabel_0->setText(QString::number(value / 10) + " dB");
 }
 
 void MainWindow::on_volumeSlider_1_valueChanged(int value){
-    oscillatorSource.setGain(1, value);
-    ui->volumeLabel_1->setText(QString::number(value) + " dB");
+    oscillatorSource.setGain(1, value / 10.0f);
+    ui->volumeLabel_1->setText(QString::number(value / 10) + " dB");
 }
 
 void MainWindow::on_volumeSlider_2_valueChanged(int value){
-    oscillatorSource.setGain(2, value);
-    ui->volumeLabel_2->setText(QString::number(value) + " dB");
+    oscillatorSource.setGain(2, value / 10.0f);
+    ui->volumeLabel_2->setText(QString::number(value / 10) + " dB");
 }
 
 void MainWindow::on_volumeSlider_3_valueChanged(int value){
-    oscillatorSource.setGain(3, value);
-    ui->volumeLabel_3->setText(QString::number(value) + " dB");
+    oscillatorSource.setGain(3, value / 10.0f);
+    ui->volumeLabel_3->setText(QString::number(value / 10) + " dB");
 }
 
 void MainWindow::on_freqBox_0_valueChanged(double freq){
@@ -1363,12 +1371,102 @@ void MainWindow::setDetection(Detection *d){
 }
 
 void MainWindow::detectionUpdate(){
-    if (eyesOpen != detection->getEyesOpen()){
-        eyesOpen = detection->getEyesOpen();
-        if (eyesOpen){
-            on_envelopeRandomizer_pressed();
-        } else {
+    if (!detection->hasDetectionError()){
+        if (eyesOpen != detection->getEyesOpen()){
+            eyesOpen = detection->getEyesOpen();
+            if (eyesOpen){
+                lastSetEyesOpen = std::chrono::steady_clock::now();
+                faceScene->clear();
+                for (int i = -1; i <= 1; i += 2){
+                    faceScene->addLine(5 * i, -2, 10 * i, -2);
+                    faceScene->addLine(5 * i, 2, 10 * i, 2);
+                    faceScene->addLine(5 * i, -2, 5 * i, 2);
+                    faceScene->addLine(10 * i, -2, 10 * i, 2);
 
+                    faceScene->addLine(7 * i, 0, 8 * i, 0);
+                    faceScene->addLine(7 * i, 0, 8 * i, 0);
+                    faceScene->addLine(7 * i, 0, 7 * i, 0);
+                    faceScene->addLine(8 * i, 0, 8 * i, 0);
+
+                }
+                if (detectionMode == QString("Random")){
+                    if (std::chrono::duration_cast<std::chrono::milliseconds>(lastSetEyesOpen - lastSetEyesClosed).count() < 750){
+                        on_envelopeRandomizer_pressed();
+                    }
+                } else if (detectionMode == QString("Chords")){
+                    ui->chordList->setCurrentRow(0);
+                } else if (detectionMode == QString("Volume")){
+    //                volumeSliders[activeOscillatorId]->setValue(-32);
+                }
+            } else {
+                lastSetEyesClosed = std::chrono::steady_clock::now();
+                faceScene->clear();
+                for (int i = -1; i <= 1; i += 2){
+                    faceScene->addLine(5 * i, -1, 10 * i, -1);
+                    faceScene->addLine(5 * i, 1, 10 * i, 1);
+                    faceScene->addLine(5 * i, -1, 5 * i, 1);
+                    faceScene->addLine(10 * i, -1, 10 * i, 1);
+                }
+                if (detectionMode == QString("Chords")){
+                    ui->chordList->setCurrentRow(1);
+                } else if (detectionMode == QString("Volume")){
+    //                volumeSliders[activeOscillatorId]->setValue(-32);
+                }
+            }
+        } else {
+            if (eyesOpen){
+                if (detectionMode == QString("Volume")){
+                    int vol = volumeSliders[activeOscillatorId]->value();
+                    if (vol < 0){
+                        volumeSliders[activeOscillatorId]->setValue(vol + 5);
+                    }
+                } else if (detectionMode == QString("Modulate")){
+                    float random = rand();
+                    freqBoxes[1]->setValue(random / RAND_MAX * 1000);
+                    on_modIndexBox_0_valueChanged(random / RAND_MAX * 5);
+                }
+            } else {
+                if (detectionMode == QString("Volume")){
+                    int vol = volumeSliders[activeOscillatorId]->value();
+                    if (vol > -240){
+                        volumeSliders[activeOscillatorId]->setValue(vol - 5);
+                    }
+                }
+            }
         }
+    } else {
+        killTimer(detectionTimerId);
+        QPen pen;
+        pen = QPen(Qt::red, 2);
+        faceScene->addLine( QLineF (31, -4, -31, 4), pen);
     }
+}
+
+void MainWindow::on_detectionModeBox_currentTextChanged(const QString &mode){
+
+    if (detectionMode == QString("Chords")){
+        ui->additionManagementSlider->setValue(0);
+    } else if (detectionMode == QString("Volume")){
+        volumeSliders[activeOscillatorId]->setValue(0);
+    } else if (detectionMode == QString("Modulate")){
+        ui->oscillatorRole_0->setCurrentIndex(oscillatorRolesBackup[0]);
+        ui->oscillatorRole_1->setCurrentIndex(oscillatorRolesBackup[1]);
+    }
+
+    if (mode == QString("Off")){
+
+    } else if (mode == QString("Random")){
+
+    } else if (mode == QString("Chords")){
+        ui->additionManagementSlider->setValue(3);
+    } else if (mode == QString("Volume")){
+        volumeSliders[activeOscillatorId]->setValue(-240);
+    } else if (mode == QString("Modulate")){
+        ui->additionManagementSlider->setValue(0);
+        oscillatorRolesBackup[0] = oscillatorRoles[0]->currentIndex();
+        oscillatorRolesBackup[1] = oscillatorRoles[1]->currentIndex();
+        ui->oscillatorRole_0->setCurrentIndex(2);
+        ui->oscillatorRole_1->setCurrentIndex(3);
+    }
+    detectionMode = mode;
 }

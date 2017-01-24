@@ -26,9 +26,15 @@ void Detection::init(){
     cap_win_height = 160;
     eyes_open = false;
     timer_started = false;
-    delay_time = 0.75;
+    delay_time = 0.015;
     eye_blink_detection_enabled = false;
     detectionError = false;
+
+    ary_index = 0;
+    min_detection_val = sizeof(eye_detection_average_ary) / 2 + 1;
+    for (int i = 0; i < sizeof(eye_detection_average_ary); i++){
+        eye_detection_average_ary[i] = false;
+    }
 
     // load data
     if(!face_cascade.load(face_cascade_name)) {
@@ -65,6 +71,7 @@ void Detection::init(){
     }
 
     if (!detectionError){
+        qDebug() << "Capturing...";
         while(capture.read(frame)) {
             if(frame.empty()) {
                 printf("No captured frame -- Break!");
@@ -73,7 +80,6 @@ void Detection::init(){
 
             detectAndDisplay(frame);
 
-
             // escape
             int cancelKey = waitKey(7);
             if((char) cancelKey == 27) {
@@ -81,6 +87,8 @@ void Detection::init(){
             }
         }
     }
+    detectionError = true;
+    qDebug() << "Capturing stopped.";
 }
 
 void Detection::detectAndDisplay(Mat frame) {
@@ -108,14 +116,11 @@ void Detection::detectAndDisplay(Mat frame) {
     } else {
         std::chrono::steady_clock::time_point current_time = std::chrono::steady_clock::now();
 
-        if(std::chrono::duration_cast<std::chrono::microseconds>(current_time - start_time).count() > delay_time) {
+        if(std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time).count() > delay_time * 1000) {
             timer_started = false;
             eye_blink_detection_enabled = true;
         }
     }
-
-
-
 
     for(size_t i = 0; i < faces.size(); i++) {
         cv::rectangle(frame, faces[i], CV_RGB(0, 255,0), 1);
@@ -133,12 +138,39 @@ void Detection::detectAndDisplay(Mat frame) {
         eyes_cascade.detectMultiScale(faceROI, eyes, 1.1, 2, 0 |CASCADE_SCALE_IMAGE, Size(30, 30));
 
         if(eye_blink_detection_enabled) {
+            auto tmp_bool = false;
+
             if(eyes.size() > 0) {
-                eyes_open = true;
-            } else {
-                eyes_open = false;
+                tmp_bool = true;
             }
-        //    qDebug()<<eyes_open;
+
+            eye_detection_average_ary[ary_index] = tmp_bool;
+            ary_index += 1;
+            if(ary_index >= sizeof(eye_detection_average_ary)) {
+                ary_index = 0;
+            }
+
+            auto tmp_count_positive_detection = 0;
+            auto tmp_count_negative_detection = 0;
+            for(int i = 0; i < int(sizeof(eye_detection_average_ary)); i++) {
+                if(eye_detection_average_ary[i]) {
+                    tmp_count_positive_detection += 1;
+                } else {
+                    tmp_count_negative_detection += 1;
+                }
+            }
+
+            if (eyes_open && tmp_count_negative_detection >= tmp_count_positive_detection * 1){
+                eyes_open = false;
+            } else if (!eyes_open && tmp_count_positive_detection >= tmp_count_negative_detection * 1){
+                eyes_open = true;
+            }
+
+//            if(tmp_count_positive_detection >= int(min_detection_val)) {
+//                eyes_open = true;
+//            } else {
+//                eyes_open = false;
+//            }
         }
 
 
@@ -179,3 +211,6 @@ bool Detection::getEyesOpen(){
     return eyes_open;
 }
 
+bool Detection::hasDetectionError(){
+    return detectionError;
+}

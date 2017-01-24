@@ -17,6 +17,7 @@ public:
     void detectAndDisplay(cv::Mat frame);
     void init();
     bool getEyesOpen();
+    bool hasDetectionError();
 
     /** Global variables */
     String face_cascade_name = "/Users/Arne/Desktop/Media Systems/AVPRG/Synthesizer/haarcascade_frontalface_alt.xml";
@@ -42,6 +43,9 @@ private:
     VideoCapture capture;
     Mat frame;
     bool detectionError;
+    unsigned int ary_index;
+    unsigned int min_detection_val;
+    bool eye_detection_average_ary[5];
 };
 
 #endif // DETECTION_H

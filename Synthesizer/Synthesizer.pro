@@ -21,7 +21,7 @@ SOURCES += main.cpp\
         modulation.cpp \
         addition.cpp \
         filter.cpp \
-    detection.cpp
+        detection.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -31,7 +31,7 @@ HEADERS  += mainwindow.h \
         modulation.h \
         addition.h \
         filter.h \
-    detection.h
+        detection.h
 
 FORMS    += mainwindow.ui
 

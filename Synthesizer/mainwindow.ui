@@ -297,7 +297,7 @@ QSlider::handle:horizontal {
 }</string>
     </property>
     <property name="minimum">
-     <number>-72</number>
+     <number>-720</number>
     </property>
     <property name="maximum">
      <number>0</number>
@@ -2071,7 +2071,7 @@ QSlider::handle:horizontal {
 }</string>
     </property>
     <property name="minimum">
-     <number>-72</number>
+     <number>-720</number>
     </property>
     <property name="maximum">
      <number>0</number>
@@ -4425,7 +4425,7 @@ QSlider::handle:horizontal {
 }</string>
     </property>
     <property name="minimum">
-     <number>-72</number>
+     <number>-720</number>
     </property>
     <property name="maximum">
      <number>0</number>
@@ -9717,7 +9717,7 @@ QSlider::handle:horizontal {
 }</string>
     </property>
     <property name="minimum">
-     <number>-72</number>
+     <number>-720</number>
     </property>
     <property name="maximum">
      <number>0</number>
@@ -11758,6 +11758,77 @@ QSlider::handle:horizontal {
      </property>
      <property name="text">
       <string>Chord participation</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="detectionModeBox">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>70</y>
+       <width>74</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::DefaultContextMenu</enum>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+     <item>
+      <property name="text">
+       <string>Off</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Random</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Chords</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Volume</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Modulate</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QGraphicsView" name="faceView">
+     <property name="geometry">
+      <rect>
+       <x>23</x>
+       <y>57</y>
+       <width>68</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
     </widget>
    </widget>

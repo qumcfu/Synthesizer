@@ -40,7 +40,6 @@ public:
       return d;
   }
 
-
 protected:
   static Memory* m_instance;
 };
@@ -65,7 +64,7 @@ class Thread : public QThread{
 private:
     void run(){
 
-        qDebug()<<"From worker thread: "<<currentThreadId();
+//        qDebug()<<"From worker thread: "<<currentThreadId();
         MIDIInput midiInput;
         QStringList inputConnections = midiInput.connections(true);
         qDebug() << "MIDI Input Connections:";
@@ -98,7 +97,7 @@ int main(int argc, char *argv[]){
     w.show();
 
 
-    qDebug()<<"From main thread: "<<QThread::currentThreadId();
+//    qDebug()<<"From main thread: "<<QThread::currentThreadId();
 
     Thread t;
     DetectionThread dt;

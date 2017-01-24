@@ -197,12 +197,15 @@ private slots:
     void on_debugButton_pressed();
     void detectionUpdate();
 
+    void on_detectionModeBox_currentTextChanged(const QString &mode);
+
 private:
     void initializeAudio();
     Ui::MainWindow *ui;
     QGraphicsScene* scenes[4];
     QGraphicsScene* processedSampleScene;
     QGraphicsScene* debugScene;
+    QGraphicsScene* faceScene;
     OscillatorSource oscillatorSource;
     AudioPlayer audioPlayer;
     int timerId;
@@ -219,6 +222,7 @@ private:
     QSpinBox* oscillatorTypes[4];
     QGroupBox* additionIntervalGroupBoxes[4];
     QComboBox* additionIntervalComboBoxes[4];
+    QSlider* volumeSliders[4];
     int recentSampleCount;
     float recentSamples[4][200];
     bool keyDown[19];
@@ -233,6 +237,8 @@ private:
     bool debugView;
     Detection* detection;
     bool eyesOpen;
+    QString detectionMode;
+    std::chrono::steady_clock::time_point lastSetEyesOpen, lastSetEyesClosed;
 
 };
 
