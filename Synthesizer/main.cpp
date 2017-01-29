@@ -53,7 +53,11 @@ void onMidiNoteOff(const int chan, const int note, const int vel){
 
 void onMidiNoteOn(const int chan, const int note, const int vel){
 //    qDebug() << "note on: " << chan << " " << note << " " << vel;
-    Memory::instance()->mainWindow()->playMidiNote(note);
+    if (vel == 0){
+        Memory::instance()->mainWindow()->releaseMidiNote(note);
+    } else {
+        Memory::instance()->mainWindow()->playMidiNote(note);
+    }
 }
 
 void onMidiController(const int chan, const int control, const int value){
@@ -66,6 +70,8 @@ private:
 
 //        qDebug()<<"From worker thread: "<<currentThreadId();
         MIDIInput midiInput;
+
+
         QStringList inputConnections = midiInput.connections(true);
         qDebug() << "MIDI Input Connections:";
         for (int i = 0; i < inputConnections.size(); ++i){

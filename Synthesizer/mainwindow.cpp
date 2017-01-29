@@ -1451,6 +1451,7 @@ void MainWindow::on_detectionModeBox_currentTextChanged(const QString &mode){
     } else if (detectionMode == QString("Modulate")){
         ui->oscillatorRole_0->setCurrentIndex(oscillatorRolesBackup[0]);
         ui->oscillatorRole_1->setCurrentIndex(oscillatorRolesBackup[1]);
+        ui->filterSelector->setCurrentIndex(0);
     }
 
     if (mode == QString("Off")){
@@ -1467,6 +1468,8 @@ void MainWindow::on_detectionModeBox_currentTextChanged(const QString &mode){
         oscillatorRolesBackup[1] = oscillatorRoles[1]->currentIndex();
         ui->oscillatorRole_0->setCurrentIndex(2);
         ui->oscillatorRole_1->setCurrentIndex(3);
+        ui->filterSelector->setCurrentIndex(1);
+        ui->filterCutoffSlider->setValue(500);
     }
     detectionMode = mode;
 }
